@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Client Management System</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+
+    <p class="pull-right">
+        Welcome:  <span sec:authentication="principal.username">User</span>
+    </p>
+</div>
+
+<br> <hr> <br>
+
+<div class="container">
+    <h1>Call Management System</h1>
+    <hr>
+    <!--<h2>New Call List</h2>-->
+
+    <form action="#" th:action="@{/saveCallList}" th:object="${call_list}" method="POST">
+
+      <!--  <td th:if="${#fields.hasErrors('refNumber')}" th:errors="*{refNumber}">ReferenceNumber Error</td>
+        <input type="text" th:field="*{refNumber}" placeholder="Reference Number" class="form-control mb-4 col-4">-->
+
+        <fieldset>
+
+            <label> Date: </label>
+            <input type="datetime-local" th:value="*{recordDate}"  th:field="*{recordDate}" class="form-control mb-4 col-4"><br>
+
+            <label> Contact Name: &nbsp; </label><td th:if="${#fields.hasErrors('contactName')}" th:errors="*{contactName}">Contact Name Error</td>
+            <input type="text" th:field="*{contactName}" placeholder="Contact Name" class="form-control mb-4 col-4">
+            <br>
+
+            <label> Contact Number: &nbsp; </label><td th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}">Contact Number Error</td>
+            <input type="text" th:field="*{contactNumber}" placeholder="Contact Number" class="form-control mb-4 col-4">
+            <br>
+
+            <label> Query: &nbsp; </label><td th:if="${#fields.hasErrors('query')}" th:errors="*{query}">Query Error</td>
+            <textarea  rows = "10" cols = "80" th:field = "*{query}" placeholder="Call Sheet" class="form-control mb-4 col-4"></textarea>
+            <br>
+
+            <label> Staff Member: &nbsp; </label> <td th:if="${#fields.hasErrors('staffName')}" th:errors="*{staffName}">Staff Name Error</td>
+            <!--<select th:field="*{staffList}">
+                <option value="">Select a Staff</option>
+                <option th:each="staff : ${call_list.staffList}" th:value="${staff.id}" th:text="${staff.staffName}"></option>
+            </select>-->
+            <select th:field="*{staffName}">
+                <option th:value="'Amy'" th:text="Amy"></option>
+                <option th:value="'Dean'" th:text="Dean"></option>
+                <option th:value="'Sebastian'" th:text="Sebastian"></option>
+                <option th:value="'Stacie'" th:text="Stacie"></option>
+            </select>
+            <!--<table>
+                <thead>
+                <tr>
+                    <th> ID</th>
+                    <th> Staff</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book, itemStat : *{staffList}">
+                    <td><input th:field="*{staffList[__${itemStat.index}__].id}" /></td>
+                    <td><input th:field="*{staffList[__${itemStat.index}__].staffName}" /></td>
+                </tr>
+                </tbody>
+            </table>-->
+                            <br><br><br><br>
+
+            <button type="submit" class="btn btn-info col-2"> Save </button>
+        </fieldset>
+
+
+    </form>
+
+    <hr>
+
+    <a th:href="@{/}"> Back to Call List</a>
+</div>
+</body>
+
+</html>

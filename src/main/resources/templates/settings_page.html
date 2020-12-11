@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Steele Rose CRM Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#data-table').DataTable();
+        });
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li th:classappend="${module == 'home' ? 'active' : ''}">
+                    <a href="#" th:href="@{/}">Home</a>
+                </li>
+                <li th:classappend="${module == 'messages' ? 'active' : ''}">
+                    <a th:href = "@{/index}"> Clients </a>
+                </li>
+                <li th:classappend="${module == 'tasks' ? 'active' : ''}">
+                    <a href="#" th:href="@{/showArchive}"> Archive </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                    <a href="/signin" th:href="@{/signin}">
+                        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+                    </a>
+                </li>
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout </a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+    <br><br>
+    <!--<h2>CRM Calls Information</h2>-->
+
+    <p class="pull-right">
+        Welcome <span sec:authentication="principal.username">User</span>
+    </p>
+    <br><br>
+    <div class="pull-right" sec:authorize="hasAuthority('ADMIN')">
+
+        <i><span sec:authentication="principal.authorities">Roles</span></i>&nbsp;
+        <a th:href="@{/settingForm}">Settings</a>
+    </div>
+</div>
+
+
+<div th:switch="${users}">
+    <h2 th:case="null">No users yet!</h2>
+    <div th:case="*">
+        <h2>Users</h2>
+        <table width="50%;">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th colspan="2">Rights</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.email}"></td>
+                <td><span th:if="${!user.admin}"><a th:href="@{/makeAdmin/{id}(id=${user.id})}">Make Admin</a></span></td><td>
+                    <span th:if="${user.admin}"><a th:href="@{/removeAdmin/{id}(id=${user.id})}">Remove Admin</a></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Client Management System</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+
+    <p class="pull-right">
+        Welcome:  <span sec:authentication="principal.username">User</span>
+    </p>
+</div>
+
+<br> <hr> <br>
+
+<div class="container">
+    <h1>Call Management System Update</h1>
+    <hr>
+    <h2> Do you want to send the information </h2><br><br>
+
+    <form action="#" th:action="@{/sendEmailCallList}" th:object="${email_list}" method="POST">
+        <fieldset>
+       <!-- <input type="hidden" th:field="*{id}" />-->
+        <!--<div>
+            <strong><span th:text="Date"></span></strong>
+            <span th:text="${email_list.callListDto.recordDate}"></span>
+        </div>
+        <div>
+            <strong><span th:text="ContactName"></span></strong>
+            <span th:text="${email_list.callListDto.contactName}"></span>
+        </div>
+        <div>
+            <strong><span th:text="ContactNumber"></span></strong>
+            <span th:text="${email_list.callListDto.contactNumber}"></span>
+        </div>
+        <div>
+            <strong><span th:text="Query"></span></strong>
+            <span th:text="${email_list.callListDto.query}"></span>
+        </div>
+-->
+
+        <label> Email To: &nbsp; </label><td th:if="${#fields.hasErrors('to')}" th:errors="*{to}">To Error</td>
+        <input type="text" th:field="*{to}" placeholder="Email To" class="form-control mb-4 col-4">
+        <br>
+        <label> Subject: &nbsp; </label>
+        <input type="text" th:field="*{subject}" placeholder="Subject (optional)" class="form-control mb-4 col-4">
+        <br>
+        <label> Message: &nbsp; </label>
+            <textarea  rows = "10" cols = "80" th:field = "*{text}" placeholder="Message (Optional)" class="form-control mb-4 col-4"></textarea>
+        <br>
+
+        <button type="submit" class="btn btn-info col-2"> Send Email </button>
+        </fieldset>
+    </form>
+
+    <hr>
+
+    <a th:href="@{/}"> Back to Call List</a>
+</div>
+</body>
+
+</html>

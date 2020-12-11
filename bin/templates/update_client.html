@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Client Management System</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM Home Page</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container">
+    <h1>Client Management System</h1>
+    <hr>
+    <h2>Update Client</h2>
+
+    <form action="#" th:action="@{/saveClient}" th:object="${client}" method="POST">
+
+        <!-- Add hidden form field to handle update -->
+        <input type="hidden" th:field="*{id}" />
+        <label for="ref">Ref Number</label>
+        <input type="text" th:field="*{refNumber}"  contenteditable="false" class="form-control mb-4 col-4">
+
+        <label for="recDate">Record Date</label>
+        <input type="datetime-local" th:value="*{recordDate}"  th:field="*{recordDate}" class="form-control mb-4 col-4">
+
+        <label for="fName">Full Name</label>
+        <input type="text" th:field="*{fullName}" class="form-control mb-4 col-4">
+
+        <label for="email">Email</label>
+        <input type="text" th:field="*{email}" class="form-control mb-4 col-4">
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+        <label for="cSheet">Call Sheet</label>
+        <textarea  rows = "10" cols = "80" th:field = "*{callSheet}" placeholder="Call Sheet" class="form-control mb-4 col-4"></textarea>
+
+        <label>Action</label> <input type="checkbox" name="Email" th:checked="*{emailCheck}"> <input type="checkbox" name="Call" th:checked="*{callCheck}">
+        <label>Status</label> <input type="checkbox" name="Done" th:checked="*{emailDone}"> <input type="checkbox" name="Done" th:checked="*{callDone}">
+        <button type="submit" class="btn btn-info col-2"> Update Client</button>
+    </form>
+
+    <hr>
+
+    <a th:href="@{/index}"> Back to Client List</a>
+</div>
+</body>
+
+</html>

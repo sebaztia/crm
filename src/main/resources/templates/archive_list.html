@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Steele Rose CRM Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#data-table').DataTable();
+        });
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li th:classappend="${module == 'home' ? 'active' : ''}">
+                    <a href="#" th:href="@{/}">Home</a>
+                </li>
+                <li th:classappend="${module == 'messages' ? 'active' : ''}">
+                    <a th:href = "@{/index}"> Clients </a>
+                </li>
+                <li th:classappend="${module == 'tasks' ? 'active' : ''}">
+                    <a href="#" th:href="@{/showArchive}"> Archive </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                    <a href="/signin" th:href="@{/signin}">
+                        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+                    </a>
+                </li>
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout </a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+    <br><br>
+    <!--<h2>CRM Archive Information</h2>-->
+
+    <p class="pull-right">
+        Welcome <b><span sec:authentication="principal.username">User</span></b>
+        &nbsp;
+       <!-- <i><span sec:authentication="principal.authorities">Roles</span></i>-->
+    </p>
+    <!--<div sec:authorize="hasAnyAuthority('ADMIN', 'ROLE_USER')">
+        <a >Edit</a>
+    </div>-->
+</div>
+
+<br> <hr> <br>
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">
+                            <h1 style="text-align: center; color: #b30000; font-weight: bold;">ARCHIVE LISTS</h1>
+                        </strong>
+                        <!--<div style="text-align: center; font-weight: bold">
+                            <a th:href="@{/showNewCallListForm}">ADD</a> <br />
+                        </div>-->
+                    </div>
+                    <div class="card-body">
+                        <table id="data-table" class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Call ID</th>
+                                <th>Date</th>
+                                <th>Contact Name</th>
+                                <th>Staff Member</th>
+                                <th>Email</th><th>Call</th>
+                                <th>Options</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr th:each="calls:${archiveList}">
+                                <td th:text="${calls.id}">Client ID</td>
+                                <td th:text="${calls.recordDate}">Client Name</td>
+                                <td th:text="${calls.contactName}">Reference Number</td>
+                                <td th:text="${calls.staffName}">Record Date</td>
+
+                                <td> <span th:if="${calls.emailCheck}" th:text="${calls.emailDone} ? 'COMPLETED' : 'PENDING'"></span> &nbsp;&nbsp;
+                                    <span th:if="${calls.emailCheck}" ><span th:if="${!calls.emailDone}" >
+                                        <a th:href="@{/emailActionDone/{id}(id=${calls.id})}" class="btn btn-success">Done</a></span></span>
+                                </td>
+                                <td> <span th:if="${calls.callCheck}" th:text="${calls.callDone} ? 'COMPLETED' : 'PENDING'"></span> &nbsp;&nbsp;
+                                    <span th:if="${calls.callCheck}" ><span th:if="${!calls.callDone}" >
+                                        <a th:href="@{/callActionDone/{id}(id=${calls.id})}" class="btn btn-success">Done</a></span></span> </td>
+
+                                <td>
+                                    <span sec:authorize="hasAuthority('ADMIN')">
+                                        <a th:href="@{/restoreCallList/{id}(id=${calls.id})}" class="btn btn-primary">Restore</a>
+                                    </span>
+                                    <a th:href="@{/deleteCallList/{id}(id=${calls.id})}" class="btn btn-danger">Delete</a>
+                                    <a th:href="@{/showCallListEmailForm/{id}(id=${calls.id})}" class="btn btn-default">Email</a>
+                                </td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

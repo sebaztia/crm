@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+
+    <!--<link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">-->
+
+    <title>Steele Rose CRM Page</title>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li th:classappend="${module == 'home' ? 'active' : ''}">
+                    <a href="#" th:href="@{/}">Home</a>
+                </li>
+                <li th:classappend="${module == 'messages' ? 'active' : ''}">
+                    <a th:href = "@{/index}"> Clients </a>
+                </li>
+                <li th:classappend="${module == 'tasks' ? 'active' : ''}">
+                    <a href="#" th:href="@{/}"> Archive </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                    <a href="/signin" th:href="@{/signin}">
+                        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+                    </a>
+                </li>
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout </a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+    <br><br>
+    <h2>CRM Call List</h2>
+
+    <p class="pull-right">
+        Welcome <span sec:authentication="principal.username">User</span>
+    </p>
+</div>
+
+<br> <hr> <br>
+
+<div class="container my-2">
+    <!--<h1>Call List</h1>-->
+
+   <!-- <a th:href = "@{/showNewCallListForm}" class="btn btn-primary btn-sm mb-3"> + </a> <br>-->
+    <p class="my-5">
+        <a th:href="@{/showNewCallListForm}" class="btn btn-primary">
+            <i class="fas fa-user-plus ml-2"> Add </i></a>
+    </p>
+
+    <table border="1" class = "table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>
+                <a th:href="@{'/page/' + ${currentPage} + '?sortField=recordDate&sortDir=' + ${reverseSortDir}}">
+                    Date</a>
+            </th>
+            <th>
+                <a th:href="@{'/page/' + ${currentPage} + '?sortField=contactName&sortDir=' + ${reverseSortDir}}">
+                    Contact Name</a>
+            </th>
+            <th>
+                <a th:href="@{'/page/' + ${currentPage} + '?sortField=staffName&sortDir=' + ${reverseSortDir}}">
+                    Staff Member</a>
+            </th>
+
+            <th> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="calls : ${listCalls}">
+            <td th:text="${calls.recordDate}"></td>
+            <td th:text="${calls.contactName}"></td>
+            <td th:text="${calls.staffName}"></td>
+
+            <td>
+                <a th:href="@{/showCallListForUpdate/{id}(id=${calls.id})}" class="btn btn-default">Update</a>
+                <a th:href="@{/deleteCallList/{id}(id=${calls.id})}" class="btn btn-danger">Delete</a>
+                <a th:href="@{/emailCallList/{id}(id=${calls.id})}" class="btn btn-default">Email</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${totalPages > 1}">
+        <div class="row col-sm-10">
+            <div class="col-sm-2">
+                Total Rows: [[${totalItems}]]
+            </div>
+            <div class="col-sm-1">
+            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+      <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+      <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+            </span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+            </div>
+
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

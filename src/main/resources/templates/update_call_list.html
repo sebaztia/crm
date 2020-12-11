@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Client Management System</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+
+    <p class="pull-right">
+        Welcome:  <span sec:authentication="principal.username">User</span>
+    </p>
+</div>
+
+<br> <hr> <br>
+
+<div class="container">
+    <h1>Call Management System Update</h1>
+    <hr>
+    <!--<h2>New Call List</h2>-->
+
+    <form action="#" th:action="@{/saveCallList}" th:object="${call_list}" method="POST">
+
+        <fieldset>
+            <input type="hidden" th:field="*{id}" />
+            <label> Date: </label>
+            <input type="datetime-local" th:value="*{recordDate}"  th:field="*{recordDate}" class="form-control mb-4 col-4">
+
+            <label> Reference Number: </label>
+            <input type="text" th:value="*{reference}"  th:field="*{reference}" class="form-control mb-4 col-4"><br>
+
+            <label> Contact Name: &nbsp; </label><span th:if="${#fields.hasErrors('contactName')}" th:errors="*{contactName}" class="text-danger"></span>
+            <input type="text" th:field="*{contactName}" placeholder="Contact Name" class="form-control mb-4 col-4">
+            <br>
+
+            <label> Contact Number: &nbsp; </label><span th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}" class="text-danger"></span>
+            <input type="text" th:field="*{contactNumber}" placeholder="Contact Number" class="form-control mb-4 col-4">
+            <br>
+
+            <label> Query: &nbsp; </label><span th:if="${#fields.hasErrors('query')}" th:errors="*{query}" class="text-danger"></span>
+            <textarea  rows = "10" cols = "80" th:field = "*{query}" placeholder="Call Sheet" class="form-control mb-4 col-4"></textarea>
+            <br>
+
+            <label> Staff Member: &nbsp; </label><span th:if="${#fields.hasErrors('staffName')}" th:errors="*{staffName}" class="text-danger"></span>
+            <select th:field="*{staffName}">
+                <option th:value="'Unknown'" th:text="UNKNOWN"></option>
+                <option th:value="'Filing'" th:text="FILING"></option>
+                <option th:value="'Amy'" th:text="Amy"></option>
+                <option th:value="'Dean'" th:text="Dean"></option>
+                <option th:value="'Sebastian'" th:text="Sebastian"></option>
+                <option th:value="'Stacie'" th:text="Stacie"></option>
+            </select>
+            <br><br><br>
+            <table width="40%">
+                <tr>
+                    <td><label>Action Required</label></td> <td><input type="checkbox" id="email_action" th:field="*{emailCheck}" th:checked="*{emailCheck}" onclick="checkEmailBoxes(this);"> &nbsp; Email</td> <td><input type="checkbox" th:value="Call" id="call_action" th:field="*{callCheck}" th:checked="*{callCheck}" onclick="checkCallBoxes(this);"> &nbsp; Call</td>
+                </tr>
+                <tr>
+                    <td><label>Status</label></td> <td><input type="checkbox" th:value="Done" id="email_status" th:field="*{emailDone}" th:checked="*{emailDone}" onclick="checkEmailBoxes(this);"> &nbsp; Done</td> <td><input type="checkbox" th:value="Done" id="call_status" th:field="*{callDone}" th:checked="*{callDone}" onclick="checkCallBoxes(this);"> &nbsp; Done</td>
+                </tr>
+            </table> <br><br>
+
+            <button type="submit" class="btn btn-info col-2"> Save </button>
+        </fieldset>
+
+    </form>
+
+    <hr>
+
+    <h4><a th:href="@{/}"> Back to Call List</a></h4>
+</div>
+<script type="text/javascript" language="JavaScript">
+    <!--
+    function checkEmailBoxes() {
+        var email_action = document.getElementById('email_action');
+        var email_status = document.getElementById('email_status');
+
+        if (email_action.checked === false && email_status.checked === true) {
+            alert ('Email Action Required at First');
+            email_status.checked = false;
+            return false;
+        }
+    }
+
+    function checkCallBoxes() {
+        var call_action = document.getElementById('call_action');
+        var call_status = document.getElementById('call_status');
+
+        if (call_action.checked === false && call_status.checked === true) {
+            alert ('Call Action Required at First');
+            call_status.checked = false;
+            return false;
+        }
+    }
+    //-->
+</script>
+</body>
+
+</html>

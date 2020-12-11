@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Steele Rose CRM Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#data-table').DataTable();
+        });
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Steele Rose CRM</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li th:classappend="${module == 'home' ? 'active' : ''}">
+                    <a href="#" th:href="@{/}">Home</a>
+                </li>
+                <li th:classappend="${module == 'messages' ? 'active' : ''}">
+                    <a th:href = "@{/index}"> Clients </a>
+                </li>
+                <li th:classappend="${module == 'tasks' ? 'active' : ''}">
+                    <a href="#" th:href="@{/showArchive}"> Archive </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                    <a href="/signin" th:href="@{/signin}">
+                        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+                    </a>
+                </li>
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout </a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<br>
+<br>
+<div class="container">
+    <br><br>
+    <!-- <h2>CRM Clients Information</h2>-->
+
+    <p class="pull-right">
+        Welcome <span sec:authentication="principal.username">User</span>
+    </p>
+</div>
+
+<br> <hr> <br>
+<form action="#" th:action="@{/showReference}" th:object="${show_ref}" method="GET">
+
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">
+                            <h1 style="text-align: center; color: #0C16BF; font-weight: bold;">LINKED CLIENTS INFORMATION</h1>
+                        </strong>
+                       <!-- <div style="text-align: center; font-weight: bold">
+                            <a th:href="@{/showNewClientForm}">Create New Client</a> <br />
+                        </div>-->
+                    </div>
+                    <div class="card-body">
+                        <table align="center" width="1200px" >
+                            <tr>
+                                <td width="50%"><table width="100%" class="table table-bordered table-striped">
+                                    <tr>
+                                        <th> Date </th><!--<td>:</td>-->
+                                        <td th:text="*{recordDate}" ></td>
+                                    </tr>
+                                    <tr>
+                                        <th> Client Reference </th>
+                                        <td th:text="*{refNumber}" ></td>
+                                    </tr>
+                                    <tr>
+                                        <th> Client Name </th>
+                                        <td th:text="*{fullName}" ></td>
+                                    </tr>
+                                    <tr>
+                                        <th> Email </th>
+                                        <td th:text="*{email}" ></td>
+                                    </tr>
+                                    <tr>
+                                        <th> Call Sheet </th>
+                                        <td th:text="*{callSheet}" style="max-width: 250px;"></td>
+                                    </tr>
+
+                                </table></td> <td> &nbsp; </td>
+                                <td valign="top">
+
+
+
+
+
+                                   <!-- <div layout:fragment="content">-->
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <!--<td> ID </td>-->
+                                                <td> Record Date </td>
+                                                <td> Client Name </td>
+                                                <td>Reference Number</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:if="${linkedReference.empty}">
+                                                <td colspan="4">No Linked Clients</td>
+                                            </tr>
+                                            <tr th:each="task : ${linkedReference}">
+                                               <!-- <td th:text="${task.id}">1</td>-->
+                                                <td th:text="${task.recordDate}">Record Date</td>
+                                                <!--<td th:text="${#dates.format(task.recordDate, 'dd-MM-yyyy HH:MM')}">Record Date</td>-->
+                                                <!--<td><a href="view.html" th:href="@{'/' + ${task.id}}" th:text="${task.id}">Title ...</a></td>-->
+                                                <!--<td th:text="${#calendars.format(task.recordDate)}">July 11, 2012 2:17:16 PM CDT</td>-->
+                                                <td th:text="${task.fullName}">Full Name ...</td>
+                                                <td><a th:href="@{/showReference/{id}(id=${task.id})}" th:text="${task.refNumber}">Ref ...</a></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                   <!-- </div>-->
+
+
+
+
+                                   <!-- <table border="1" align="center" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th>Record Date</th>
+                                            <th>Client Name</th>
+                                            <th>Reference Number</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                        <tr th:each="client : ${linkedReference}">
+                                            <td th:text="${client.recordDate}">Record Date</td>
+                                            <td th:text="${client.fullName}">Client Name</td>
+                                            <td><a th:href="@{/showReference/{id}(id=${client.id})}" th:text="${client.refNumber}"></a></td>
+
+                                        </tr>
+                                        </tbody>
+
+                                    </table>-->
+                                </td>
+                            </tr>
+
+                        </table>
+                        <!--<table id="data-table" class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                &lt;!&ndash;<th>Client ID</th>&ndash;&gt;
+                                <th>Client Name</th>
+                                <th>Reference Number</th>
+                                <th>Record Date</th> The m,ain target is to be modified in the method.. Is that can be uniquely identifing from one to another
+                                <th>Call Sheet</th>
+                                <th>Options</th>
+                                &lt;!&ndash;<th>Action Required</th>
+                                <th>Email</th><th>Call</th>&ndash;&gt;
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr th:each="client:${listAll}">
+                                &lt;!&ndash; <td th:text="${client.id}">Client ID</td>&ndash;&gt;
+                                <td th:text="${client.fullName}">Client Name</td>
+                                <td><a th:href="@{/showReference/{id}(id=${client.id})}" th:text="${client.refNumber}"></a></td>
+                                <td th:text="${client.recordDate}">Record Date</td>
+                                <td th:text="${client.callSheet}">Call Sheet</td>
+                                <td>
+                                    <a th:href="@{/showFormForUpdate/{id}(id=${client.id})}" class="btn btn-primary">Details</a>
+                                    &lt;!&ndash;<a th:href="@{/deleteClient/{id}(id=${client.id})}" class="btn btn-danger">Delete</a>&ndash;&gt;
+                                    <a th:href="@{/showClientEmailForm/{id}(id=${client.id})}" class="btn btn-default">Email</a>
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</form>
+<hr>
+
+<h4 class="text-center"><a th:href="@{/index}"> Back to Client List</a></h4>
+</body>
+</html>
